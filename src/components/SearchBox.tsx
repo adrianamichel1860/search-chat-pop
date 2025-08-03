@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, MessageCircle } from "lucide-react";
+import { Search, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { searchProducts, Product } from "@/lib/mockProducts";
@@ -52,7 +52,7 @@ export const SearchBox = ({ onChatClick }: SearchBoxProps) => {
           className="absolute right-2 h-8 w-8 p-0 bg-gradient-to-r from-primary to-primary-glow shadow-[var(--shadow-button)] hover:shadow-lg transform hover:scale-105 transition-all duration-300 animate-bounce-subtle"
           title="Open AI Shopping Assistant"
         >
-          <MessageCircle className="h-4 w-4" />
+          <Sparkles className="h-4 w-4" />
         </Button>
       </div>
       
