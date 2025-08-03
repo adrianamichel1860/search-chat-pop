@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X, Send, MessageCircle, User } from "lucide-react";
+import { X, Send, MessageCircle, User, Maximize2, Minimize2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -20,12 +20,13 @@ export const ChatWidget = ({ isOpen, onClose }: ChatWidgetProps) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: "Hi! I'm here to help you find the perfect products. What are you looking for today?",
+      text: "Hi! I'm your AI shopping assistant. I can help you find products, answer questions, and provide personalized recommendations. What are you looking for today?",
       sender: 'bot',
       timestamp: new Date()
     }
   ]);
   const [inputValue, setInputValue] = useState('');
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const handleSendMessage = () => {
     if (!inputValue.trim()) return;
@@ -40,11 +41,11 @@ export const ChatWidget = ({ isOpen, onClose }: ChatWidgetProps) => {
     setMessages(prev => [...prev, userMessage]);
     setInputValue('');
 
-    // Simulate bot response
+    // Simulate AI bot response
     setTimeout(() => {
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: "Thanks for your message! I'd be happy to help you with that. Let me find some great options for you.",
+        text: "I understand you're looking for that! Let me analyze your request and suggest some great options. Based on your search, I can recommend products that match your needs perfectly. Would you like me to show you some specific categories or price ranges?",
         sender: 'bot',
         timestamp: new Date()
       };
@@ -55,25 +56,41 @@ export const ChatWidget = ({ isOpen, onClose }: ChatWidgetProps) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed bottom-4 right-4 w-80 h-96 bg-chat-bg border border-border rounded-lg shadow-[var(--shadow-chat)] animate-slide-in z-50">
+    <div className={`fixed bg-chat-bg border border-border rounded-lg shadow-[var(--shadow-chat)] animate-slide-in z-50 transition-all duration-300 ${
+      isExpanded 
+        ? 'top-4 left-4 right-4 bottom-4 w-auto h-auto' 
+        : 'bottom-4 right-4 w-80 h-96'
+    }`}>
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-border bg-gradient-to-r from-primary to-primary-glow text-primary-foreground rounded-t-lg">
         <div className="flex items-center gap-2">
           <MessageCircle className="h-5 w-5" />
-          <span className="font-semibold">Store Assistant</span>
+          <span className="font-semibold">AI Shopping Assistant</span>
         </div>
-        <Button
-          onClick={onClose}
-          variant="ghost"
-          size="sm"
-          className="h-6 w-6 p-0 text-primary-foreground hover:bg-white/20"
-        >
-          <X className="h-4 w-4" />
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            onClick={() => setIsExpanded(!isExpanded)}
+            variant="ghost"
+            size="sm"
+            className="h-6 w-6 p-0 text-primary-foreground hover:bg-white/20"
+            title={isExpanded ? "Minimize chat" : "Expand chat"}
+          >
+            {isExpanded ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
+          </Button>
+          <Button
+            onClick={onClose}
+            variant="ghost"
+            size="sm"
+            className="h-6 w-6 p-0 text-primary-foreground hover:bg-white/20"
+            title="Close chat"
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
 
       {/* Messages */}
-      <ScrollArea className="flex-1 p-4 h-64">
+      <ScrollArea className={`flex-1 p-4 ${isExpanded ? 'h-[calc(100vh-200px)]' : 'h-64'}`}>
         <div className="space-y-4">
           {messages.map((message) => (
             <div
